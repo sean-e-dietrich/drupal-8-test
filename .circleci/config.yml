@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    working_directory: /var/www/project
+    docker:
+      - image: kanopi/ci
+    environment:
+      - APACHE_DOCUMENTROOT: /var/www/project
+    steps:
+      - checkout
+      - run:
+          name: Run Composer
+          command: composer install
