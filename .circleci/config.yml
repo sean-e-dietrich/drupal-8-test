@@ -4,22 +4,35 @@ jobs:
     working_directory: /var/www/project
     docker:
       - image: kanopi/ci
-    environment:
-      - APACHE_DOCUMENTROOT: /var/www/project
+        environment:
+          - APACHE_DOCUMENTROOT: /var/www/project
     steps:
+      - run:
+          name: WHOAMI
+          command: whoami
       - checkout
       - run:
           name: Run Composer
           command: composer install
+      - run:
+          name: Create Database
+          command: |
+            mysql -u root \
+              -e 'CREATE DATABASE IF NOT EXISTS `default` CHARACTER SET utf8mb4;'
+      - run:
+          name: Fix Permissions
+          command: sudo chown -R circleci:circleci /var/www/project
+      - run:
+          name: Copy Settings File
+          command: cp sites/default/default.settings.php sites/default/settings.php | true
       - run:
           name: Run Site Install
           command: |
             vendor/bin/drush site-install standard \
               -y \
               install_configure_form.enable_update_status_module=NULL \
-              --db-url="mysql://user:user@localhost/default" \
+              --db-url="mysql://root@127.0.0.1/default" \
               --db-su=root \
-              --db-su-pw=root \
               --site-name="Test Site" \
               --site-mail="test@example.com" \
               --account-mail="test@example.com" \
