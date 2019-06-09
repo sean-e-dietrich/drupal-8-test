@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /var/www/project
     docker:
-      - image: kanopi/ci:circleci-fix
+      - image: kanopi/ci:edge-circleci-fix
         environment:
           - APACHE_DOCUMENTROOT: /var/www/project
           - SECRET_TEST: 123456
