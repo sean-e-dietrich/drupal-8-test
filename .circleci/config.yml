@@ -42,7 +42,7 @@ jobs:
           name: Test What is Installed
           command: |
             echo ${PATH}
-            echo ${HOME}/.bashrc
+            cat ${HOME}/.bashrc
             source ${HOME}/.bashrc
             echo ${PATH}
             which npm || true
