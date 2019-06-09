@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /var/www/project
     docker:
-      - image: kanopi/ci
+      - image: kanopi/ci:edge-master
         environment:
           - APACHE_DOCUMENTROOT: /var/www/project
     steps:
