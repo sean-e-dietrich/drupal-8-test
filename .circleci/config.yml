@@ -42,7 +42,7 @@ jobs:
           name: Test What is Installed
           command: |
             echo ${PATH}
-            echo "export ${HOME}/.profile" >> ${HOME}/.bashrc
+            echo ${HOME}/.bashrc
             source ${HOME}/.bashrc
             echo ${PATH}
             which npm || true
