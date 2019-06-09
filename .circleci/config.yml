@@ -41,9 +41,8 @@ jobs:
       - run:
           name: Test What is Installed
           command: |
-            echo ${PATH}
-            cat ${HOME}/.bashrc
-            source ${HOME}/.bashrc
+            echo ". ${HOME}/.profile" >> ${BASH_ENV}
+            source ${BASH_ENV}
             echo ${PATH}
             which npm || true
             which gem || true
