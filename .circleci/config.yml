@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /var/www/project
     docker:
-      - image: kanopi/ci:edge-test_user
+      - image: kanopi/ci
         environment:
           - APACHE_DOCUMENTROOT: /var/www/project
     steps:
@@ -38,6 +38,22 @@ jobs:
               --account-mail="test@example.com" \
               --account-name="testuser" \
               --account-pass="test123"
+      - run:
+          name: Test What is Installed
+          command: |
+            echo ${PATH}
+            which npm || true
+            which gem || true
+            which ruby || true
+            which nvm || true
+            which drupal || true
+            which wp-cli || true
+            which backstop || true
+            which grunt || true
+            which gulp || true
+            which lighthouse || true
+            which axe-cli || true
+            which yarn || true
       - run:
           name: Test Curl
           command: curl -i "http://localhost"
