@@ -25,7 +25,12 @@ jobs:
           command: sudo chown -R circleci:circleci /var/www/project
       - run:
           name: Copy Settings File
-          command: cp sites/default/default.settings.php sites/default/settings.php | true
+          command: cp sites/default/default.settings.php sites/default/settings.php || true
+      - run:
+          name: Add Files Directory
+          command: |
+            mkdir sites/default/files || true
+            chmod 777 sites/default/files
       - run:
           name: Run Site Install
           command: |
