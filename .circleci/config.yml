@@ -6,6 +6,7 @@ jobs:
       - image: kanopi/ci:edge-master
         environment:
           - APACHE_DOCUMENTROOT: /var/www/project
+          - SECRET_TEST: 123456
     steps:
       - run:
           name: WHOAMI
@@ -41,6 +42,7 @@ jobs:
       - run:
           name: Test What is Installed
           command: |
+            set
             echo ". ${HOME}/.profile" >> ${BASH_ENV}
             source ${BASH_ENV}
             echo ${PATH}
@@ -66,6 +68,7 @@ jobs:
           name: Take Screenshots
           command: |
             mkdir -p /tmp/artifacts/
-            pageres https://google.com http://localhost 1280x800 --format=jpg --filename="/tmp/artifacts/<%= date %>_<%= url %>"
+            cd /tmp/artifacts/
+            pageres https://google.com http://localhost 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
       - store_artifacts:
           path: /tmp/artifacts
