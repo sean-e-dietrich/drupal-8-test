@@ -43,7 +43,7 @@ jobs:
           command: curl -i "http://localhost"
       - run:
           name: Added pageres CLI tool
-          command: sudo npm install -g pageres-cli
+          command: npm install -g pageres-cli
       - run:
           name: Take Screenshots
           command: pageres google.com yahoo.com localhost 1280x800 --format=jpg --filename="/tmp/artifacts/<%= date %>_<%= url %>"
