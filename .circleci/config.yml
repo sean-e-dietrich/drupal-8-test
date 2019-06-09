@@ -38,3 +38,14 @@ jobs:
               --account-mail="test@example.com" \
               --account-name="testuser" \
               --account-pass="test123"
+      - run:
+          name: Test Curl
+          command: curl -i "http://localhost"
+      - run:
+          name: Added pageres CLI tool
+          command: sudo npm install -g pageres-cli
+      - run:
+          name: Take Screenshots
+          command: pageres google.com yahoo.com localhost 1280x800 --format=jpg --filename="/tmp/artifacts/<%= date %>_<%= url %>"
+      - store_artifacts:
+          path: /tmp/artifacts
