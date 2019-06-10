@@ -51,6 +51,7 @@ jobs:
             echo ". ${HOME}/.profile" >> ${BASH_ENV}
             source ${BASH_ENV}
             echo ${PATH}
+            set
             which npm || true
             which gem || true
             which ruby || true
