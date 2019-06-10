@@ -74,7 +74,6 @@ jobs:
           command: |
             mkdir -p /tmp/artifacts/
             cd /tmp/artifacts/
-            pageres -h
             pageres https://google.com http://localhost 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
       - store_artifacts:
           path: /tmp/artifacts
