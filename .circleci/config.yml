@@ -48,6 +48,7 @@ jobs:
           name: Test What is Installed
           command: |
             set
+            cat /etc/profile.d/secrets.sh
             echo ". ${HOME}/.profile" >> ${BASH_ENV}
             source ${BASH_ENV}
             echo ${PATH}
