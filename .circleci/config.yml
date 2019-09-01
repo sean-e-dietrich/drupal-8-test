@@ -47,9 +47,6 @@ jobs:
             mysql -u root \
               -e 'CREATE DATABASE IF NOT EXISTS `default` CHARACTER SET utf8mb4;'
       - run:
-          name: Fix Permissions
-          command: sudo chown -R circleci:circleci /var/www/project
-      - run:
           name: Copy Settings File
           command: cp sites/default/default.settings.php sites/default/settings.php || true
       - run:
