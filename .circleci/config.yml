@@ -63,7 +63,7 @@ jobs:
               install_configure_form.enable_update_status_module=NULL \
               --db-url="mysql://root:rootpw@127.0.0.1/default" \
               --db-su=root \
-              --db-pw=rootpw \
+              --db-su-pw=rootpw \
               --site-name="Test Site" \
               --site-mail="test@example.com" \
               --account-mail="test@example.com" \
