@@ -3,15 +3,41 @@ jobs:
   build:
     working_directory: /var/www/project
     docker:
-      - image: kanopi/ci:edge-circleci-fix
+      - image: circleci/php:7.2-apache-node-browsers
+      - image: circleci/mysql:8.0.4
         environment:
-          - APACHE_DOCUMENTROOT: /var/www/project
-          - SECRET_TEST: 123456
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: passw0rd
+
     steps:
-      - run:
-          name: WHOAMI
-          command: whoami
       - checkout
+      - run:
+          name: Configure & start Apache
+          command: |
+            sudo cp /var/www/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
+            sudo a2ensite example
+            sudo service apache2 start
+      - run:
+          name: Update host file
+          command: |
+            echo 127.0.0.1 example.localhost | sudo tee -a /etc/hosts
+            cat /etc/hosts
+      - run:
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get install default-mysql-client
       - run:
           name: Run Composer
           command: composer install
@@ -37,37 +63,17 @@ jobs:
             drush site-install standard \
               -y \
               install_configure_form.enable_update_status_module=NULL \
-              --db-url="mysql://root@127.0.0.1/default" \
+              --db-url="mysql://root:rootpw@127.0.0.1/default" \
               --db-su=root \
+              --db-pw=rootpw \
               --site-name="Test Site" \
               --site-mail="test@example.com" \
               --account-mail="test@example.com" \
               --account-name="testuser" \
               --account-pass="test123"
       - run:
-          name: Test What is Installed
-          command: |
-            set
-            cat /etc/profile.d/secrets.sh
-            echo ". ${HOME}/.profile" >> ${BASH_ENV}
-            source ${BASH_ENV}
-            echo ${PATH}
-            set
-            which npm || true
-            which gem || true
-            which ruby || true
-            which nvm || true
-            which drupal || true
-            which wp-cli || true
-            which backstop || true
-            which grunt || true
-            which gulp || true
-            which lighthouse || true
-            which axe-cli || true
-            which yarn || true
-      - run:
           name: Test Curl
-          command: curl -i "http://localhost"
+          command: curl -i "http://example.localhost"
       - run:
           name: Added pageres CLI tool
           command: npm install -g pageres-cli
@@ -76,6 +82,6 @@ jobs:
           command: |
             mkdir -p /tmp/artifacts/
             cd /tmp/artifacts/
-            pageres https://google.com http://localhost 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
+            pageres https://google.com http://example.localhost 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
       - store_artifacts:
           path: /tmp/artifacts
