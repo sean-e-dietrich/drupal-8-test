@@ -12,12 +12,12 @@ set -xe; \
 		git-lfs \
 		ghostscript \
 		# html2text binary - used for self-testing (php-fpm)
-		html2text \
+		#html2text \
 		imagemagick \
 		iputils-ping \
 		less \
 		# cgi-fcgi binary - used for self-testing (php-fpm)
-		libfcgi-bin \
+		#libfcgi-bin \
 		mc \
 		msmtp \
 		mysql-client \
