@@ -18,6 +18,7 @@ jobs:
           name: Configure & start Apache
           command: |
             #sudo ~/project/.circleci/install.sh
+            sudo apt-get install mysql-client
             sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
             sudo a2ensite example
             sudo service apache2 start
