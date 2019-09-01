@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Create Database
           command: |
-            mysql -u root \
+            mysql -u root -prootpw \
               -e 'CREATE DATABASE IF NOT EXISTS `default` CHARACTER SET utf8mb4;'
       - run:
           name: Copy Settings File
