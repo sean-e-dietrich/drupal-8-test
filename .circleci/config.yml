@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /var/www/project
+    working_directory: ~/project
     docker:
       - image: circleci/php:7.2-apache-node-browsers
       - image: circleci/mysql:8.0.4
@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Configure & start Apache
           command: |
-            sudo cp /var/www/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
+            sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
             sudo a2ensite example
             sudo service apache2 start
       - run:
