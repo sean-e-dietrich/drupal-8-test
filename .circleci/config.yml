@@ -17,8 +17,7 @@ jobs:
       - run:
           name: Configure & start Apache
           command: |
-            sudo apt install php-mysql/stable
-            sudo apt-get install default-mysql-client
+            sudo ~/.circleci/install.sh
             sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
             sudo a2ensite example
             sudo service apache2 start
