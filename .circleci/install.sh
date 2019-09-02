@@ -24,6 +24,10 @@ mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
 
 sudo sed -i 's/main/main contrib non-free/' /etc/apt/sources.list
 
+sudo apt-get update
+sudo apt-get -y --no-install-recommends install >/dev/null \
+        apt-transport-https
+
 # git-lfs repo
 curl -fsSL https://packagecloud.io/github/git-lfs/gpgkey | sudo apt-key add -
 echo 'deb https://packagecloud.io/github/git-lfs/debian stretch main' | sudo tee /etc/apt/sources.list.d/github_git-lfs.list
@@ -33,7 +37,6 @@ sudo mkdir -p /usr/share/man/man1 /usr/share/man/man7
 sudo apt-get update
 
 sudo apt-get -y --no-install-recommends install >/dev/null \
-        apt-transport-https \
         wget \
         software-properties-common \
         dirmngr \
