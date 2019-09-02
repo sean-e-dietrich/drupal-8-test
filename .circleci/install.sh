@@ -2,8 +2,12 @@
 
 set -eo pipefail
 
+# APT Variables
 DEBIAN_FRONTEND=noninteractive
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+
+# Skip Download
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 
 # Set up BASH_ENV if it was not set for us.
 BASH_ENV=${BASH_ENV:-$HOME/.bashrc}
