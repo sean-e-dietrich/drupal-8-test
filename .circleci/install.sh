@@ -166,19 +166,19 @@ su -l -m circleci -c 'echo "export DRUSH_LAUNCHER_FALLBACK=/usr/local/bin/drush8
 
 # Composer based dependencies
 # Add composer bin directory to PATH
-su -l -m circleci -c 'echo \'export PATH="$PATH:$HOME/.composer/vendor/bin"\' | tee -a $BASH_ENV'
+su -l -m circleci -c 'echo \"export PATH="$PATH:$HOME/.composer/vendor/bin"\" | tee -a $BASH_ENV'
 
 # Install cgr to use it in-place of `composer global require`
 su -l -m circleci -c "composer global require consolidation/cgr >/dev/null"
 # Composer parallel install plugin
 su -l -m circleci -c 'composer global require hirak/prestissimo >/dev/null'
 # Drupal Coder & WP Coding Standards w/ a matching version of PHP_CodeSniffer
-su -l -m circleci -c 'cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp >/dev/null'
+su -l -m circleci -c 'cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp > /dev/null'
 su -l -m circleci -c 'phpcs --config-set installed_paths "$HOME/.composer/global/drupal/coder/vendor/drupal/coder/coder_sniffer/,$HOME/.composer/global/wp-coding-standards/wpcs/vendor/wp-coding-standards/wpcs/"'
 # Terminus
-su -l -m circleci -c 'cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null'
+su -l -m circleci -c "cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null"
 # Cleanup
-su -l -m circleci -c 'composer clear-cache'
+su -l -m circleci -c "composer clear-cache"
 
 # Drush modules
 su -l -m circleci -c 'drush dl registry_rebuild --default-major=7 --destination=$HOME/.drush >/dev/null'
