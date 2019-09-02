@@ -186,6 +186,7 @@ composer global require hirak/prestissimo >/dev/null
   echo 'export TERMINUS_HIDE_UPDATE_MESSAGE=1'
   echo "export ARTIFACTS_DIR='artifacts'"
   echo "export ARTIFACTS_FULL_DIR='/tmp/artifacts'"
+  echo "export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1"
 ) >> $BASH_ENV
 
 source $BASH_ENV
@@ -216,4 +217,4 @@ sudo a2ensite example
 sudo service apache2 start
 
 # Install Page Res
-sudo npm install -g pageres-cli
+npm install -g pageres-cli
