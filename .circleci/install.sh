@@ -184,7 +184,7 @@ composer global require consolidation/cgr >/dev/null
 composer global require hirak/prestissimo >/dev/null
 
 (
-  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin:$HOME/bin"'
+  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin:$HOME/bin:$HOME/.npm-global/bin"'
   echo 'export TERMINUS_HIDE_UPDATE_MESSAGE=1'
   echo "export ARTIFACTS_DIR='artifacts'"
   echo "export ARTIFACTS_FULL_DIR='/tmp/artifacts'"
@@ -217,5 +217,8 @@ sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.co
 sudo a2ensite example
 sudo service apache2 start
 
+ mkdir ~/.npm-global
+ #npm config set prefix '~/.npm-global'
+
 # Install Page Res
-sudo npm install -g pageres-cli
+sudo npm install -g pageres-cli --unsafe-perm=true
