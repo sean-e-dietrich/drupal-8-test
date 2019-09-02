@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/project
     docker:
-      - image: circleci/php:7.2-apache-stretch-node-browsers
+      - image: circleci/php:7.2-apache-stretch-node
         environment:
           DRUSH_LAUNCHER_FALLBACK: /usr/local/bin/drush8
           WEBSITE_URL: "example.localhost"

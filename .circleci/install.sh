@@ -6,9 +6,6 @@ set -eo pipefail
 DEBIAN_FRONTEND=noninteractive
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 
-# Skip Download
-PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
-
 # Set up BASH_ENV if it was not set for us.
 BASH_ENV=${BASH_ENV:-$HOME/.bashrc}
 
@@ -216,4 +213,4 @@ sudo a2ensite example
 sudo service apache2 start
 
 # Install Page Res
-sudo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install -g pageres-cli
+sudo npm install -g pageres-cli
