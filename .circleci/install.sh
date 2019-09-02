@@ -215,4 +215,4 @@ sudo a2ensite example
 sudo service apache2 start
 
 # Install Page Res
-sudo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install -g pageres-cli
+sudo npm install -g pageres-cli
