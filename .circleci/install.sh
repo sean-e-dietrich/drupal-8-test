@@ -178,7 +178,7 @@ composer global require consolidation/cgr >/dev/null
 composer global require hirak/prestissimo >/dev/null
 
 (
-  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin:$HOME/bin'
+  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin:$HOME/bin"'
   echo 'export TERMINUS_HIDE_UPDATE_MESSAGE=1'
   echo "export ARTIFACTS_DIR='artifacts'"
   echo "export ARTIFACTS_FULL_DIR='/tmp/artifacts'"
