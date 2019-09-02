@@ -190,6 +190,9 @@ composer global require hirak/prestissimo >/dev/null
 
 source $BASH_ENV
 
+# Create Artifacts Directory
+mkdir -p $ARTIFACTS_FULL_DIR || true
+
 echo 'Contents of BASH_ENV:'
 cat $BASH_ENV
 echo
@@ -211,3 +214,6 @@ drush cc drush
 sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
 sudo a2ensite example
 sudo service apache2 start
+
+# Install Page Res
+sudo npm install -g pageres-cli
