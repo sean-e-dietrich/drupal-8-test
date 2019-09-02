@@ -102,6 +102,7 @@ sudo apt-get -y --no-install-recommends install >/dev/null \
         libxpm4 \
         libxslt1.1 \
         libxtst6 \
+        libnss3 \
         libzip4
 
 # SSH2 must be installed from source for PHP 7.x
