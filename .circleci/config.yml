@@ -4,6 +4,8 @@ jobs:
     working_directory: ~/project
     docker:
       - image: circleci/php:7.2-apache-stretch-node-browsers
+        environment:
+          DRUSH_LAUNCHER_FALLBACK: /usr/local/bin/drush8
       - image: circleci/mariadb:jessie
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -14,6 +16,9 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: Add Composer to Path
+          command: echo 'export PATH="$PATH:$HOME/.composer/vendor/bin' >> $BASH_ENV
       - run:
           name: Configure & start Apache
           command: |

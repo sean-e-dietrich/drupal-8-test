@@ -161,13 +161,6 @@ curl -fsSL "https://github.com/platformsh/platformsh-cli/releases/download/v${PL
 # Make all downloaded binaries executable in one shot
 (cd /usr/local/bin && chmod +x composer drush8 drush drupal wp platform hub);
 
-# Set drush8 as a global fallback for Drush Launcher
-su -l circleci -c 'echo "export DRUSH_LAUNCHER_FALLBACK=/usr/local/bin/drush8" | tee -a $BASH_ENV'
-
-# Composer based dependencies
-# Add composer bin directory to PATH
-su -l circleci -c 'echo \"export PATH="$PATH:$HOME/.composer/vendor/bin"\" | tee -a $BASH_ENV'
-
 # Install cgr to use it in-place of `composer global require`
 su -l circleci -c 'composer global require consolidation/cgr >/dev/null'
 # Composer parallel install plugin
