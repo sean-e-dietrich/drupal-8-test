@@ -22,9 +22,8 @@ TERMINUS_VERSION=2.0.1
 # Avoid ssh prompting when connecting to new ssh hosts
 mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
 
-sudo apt-get -y --no-install-recommends install apt-transport-https wget
-
 sudo sed -i 's/main/main contrib non-free/' /etc/apt/sources.list
+
 # git-lfs repo
 curl -fsSL https://packagecloud.io/github/git-lfs/gpgkey | sudo apt-key add -
 echo 'deb https://packagecloud.io/github/git-lfs/debian stretch main' | sudo tee /etc/apt/sources.list.d/github_git-lfs.list
@@ -32,7 +31,10 @@ echo 'deb-src https://packagecloud.io/github/git-lfs/debian stretch main' | sudo
 
 sudo mkdir -p /usr/share/man/man1 /usr/share/man/man7
 sudo apt-get update
+
 sudo apt-get -y --no-install-recommends install >/dev/null \
+        apt-transport-https \
+        wget \
         software-properties-common \
         dirmngr \
         cron \
@@ -213,4 +215,4 @@ sudo a2ensite example
 sudo service apache2 start
 
 # Install Page Res
-sudo npm install -g pageres-cli
+sudo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install -g pageres-cli
