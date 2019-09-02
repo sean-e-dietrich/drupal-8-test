@@ -59,7 +59,7 @@ jobs:
           command: curl -i "http://example.localhost"
       - run:
           name: Added pageres CLI tool
-          command: npm install -g pageres-cli
+          command: sudo npm install -g pageres-cli
       - run:
           name: Take Screenshots
           command: |
