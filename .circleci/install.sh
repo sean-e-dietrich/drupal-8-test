@@ -186,7 +186,6 @@ composer global require hirak/prestissimo >/dev/null
   echo 'export TERMINUS_HIDE_UPDATE_MESSAGE=1'
   echo "export ARTIFACTS_DIR='artifacts'"
   echo "export ARTIFACTS_FULL_DIR='/tmp/artifacts'"
-  echo "export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1"
 ) >> $BASH_ENV
 
 source $BASH_ENV
@@ -214,7 +213,7 @@ drush cc drush
 # Install Apache Example Config
 sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
 sudo a2ensite example
-sudo service apache2 start
+sudo service apache2 reload
 
 # Install Page Res
-npm install -g pageres-cli
+sudo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install -g pageres-cli
