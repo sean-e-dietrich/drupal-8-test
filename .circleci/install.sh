@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -eo pipefail
 
 DEBIAN_FRONTEND=noninteractive
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 
-# Avoid ssh prompting when connecting to new ssh hosts
-mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
+# Set up BASH_ENV if it was not set for us.
+BASH_ENV=${BASH_ENV:-$HOME/.bashrc}
 
 # PHP tools (installed globally)
 COMPOSER_VERSION=1.9.0
@@ -17,6 +17,9 @@ WPCLI_VERSION=2.3.0
 PLATFORMSH_CLI_VERSION=3.47.0
 HUB_VERSION=2.12.3
 TERMINUS_VERSION=2.0.1
+
+# Avoid ssh prompting when connecting to new ssh hosts
+mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
 
 sudo apt-get -y --no-install-recommends install apt-transport-https wget
 
@@ -175,7 +178,10 @@ composer global require consolidation/cgr >/dev/null
 composer global require hirak/prestissimo >/dev/null
 
 (
-  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin'
+  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin:$HOME/bin'
+  echo 'export TERMINUS_HIDE_UPDATE_MESSAGE=1'
+  echo "export ARTIFACTS_DIR='artifacts'"
+  echo "export ARTIFACTS_FULL_DIR='/tmp/artifacts'"
 ) >> $BASH_ENV
 
 source $BASH_ENV
