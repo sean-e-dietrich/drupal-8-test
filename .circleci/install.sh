@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-set -xe;
+set -eo pipefail
 
 DEBIAN_FRONTEND=noninteractive
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+
+# Avoid ssh prompting when connecting to new ssh hosts
+mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
 
 # PHP tools (installed globally)
 COMPOSER_VERSION=1.9.0
@@ -15,17 +18,17 @@ PLATFORMSH_CLI_VERSION=3.47.0
 HUB_VERSION=2.12.3
 TERMINUS_VERSION=2.0.1
 
-apt-get -y --no-install-recommends install apt-transport-https wget
+sudo apt-get -y --no-install-recommends install apt-transport-https wget
 
-sed -i 's/main/main contrib non-free/' /etc/apt/sources.list; \
+sudo sed -i 's/main/main contrib non-free/' /etc/apt/sources.list
 # git-lfs repo
-curl -fsSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add -; \
-echo 'deb https://packagecloud.io/github/git-lfs/debian stretch main' | tee /etc/apt/sources.list.d/github_git-lfs.list; \
-echo 'deb-src https://packagecloud.io/github/git-lfs/debian stretch main' | tee -a /etc/apt/sources.list.d/github_git-lfs.list;
+curl -fsSL https://packagecloud.io/github/git-lfs/gpgkey | sudo apt-key add -
+echo 'deb https://packagecloud.io/github/git-lfs/debian stretch main' | sudo tee /etc/apt/sources.list.d/github_git-lfs.list
+echo 'deb-src https://packagecloud.io/github/git-lfs/debian stretch main' | sudo tee -a /etc/apt/sources.list.d/github_git-lfs.list
 
-mkdir -p /usr/share/man/man1 /usr/share/man/man7; \
-apt-get update; \
-apt-get -y --no-install-recommends install >/dev/null \
+sudo mkdir -p /usr/share/man/man1 /usr/share/man/man7
+sudo apt-get update
+sudo apt-get -y --no-install-recommends install >/dev/null \
         software-properties-common \
         dirmngr \
         cron \
@@ -47,8 +50,6 @@ apt-get -y --no-install-recommends install >/dev/null \
         webp \
         zip
 
-# Note: essential build tools (g++, gcc, make, etc) are included upstream as persistent packages.
-# See https://github.com/docker-library/php/blob/4af0a8734a48ab84ee96de513aabc45418b63dc5/7.2/stretch/fpm/Dockerfile#L18-L37
 buildDeps=" \
         libc-client2007e-dev \
         libfreetype6-dev \
@@ -68,12 +69,12 @@ buildDeps=" \
         libxpm-dev \
         libxslt1-dev \
         libzip-dev \
-        unixodbc-dev \
-"; \
-        apt-get update >/dev/null; \
+        unixodbc-dev"
+
+sudo apt-get update >/dev/null
 
 ACCEPT_EULA=Y \
-apt-get -y --no-install-recommends install >/dev/null \
+sudo apt-get -y --no-install-recommends install >/dev/null \
         $buildDeps \
         libc-client2007e \
         libfreetype6 \
@@ -94,20 +95,21 @@ apt-get -y --no-install-recommends install >/dev/null \
         libzip4
 
 # SSH2 must be installed from source for PHP 7.x
-git clone https://github.com/php/pecl-networking-ssh2.git /usr/src/php/ext/ssh2 && rm -rf /usr/src/php/ext/ssh2/.git
+sudo git clone https://github.com/php/pecl-networking-ssh2.git /usr/src/php/ext/ssh2
+sudo rm -rf /usr/src/php/ext/ssh2/.git
 
-docker-php-ext-configure >/dev/null gd \
+sudo docker-php-ext-configure >/dev/null gd \
         --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
         --with-webp-dir=/usr/include/ \
         --with-png-dir=/usr/include/ \
-        --with-xpm-dir=/usr/include/; \
-docker-php-ext-configure >/dev/null imap --with-kerberos --with-imap-ssl; \
-docker-php-ext-configure >/dev/null ldap --with-libdir=lib/x86_64-linux-gnu/; \
-docker-php-ext-configure >/dev/null pgsql --with-pgsql=/usr/local/pgsql/; \
-docker-php-ext-configure >/dev/null zip --with-libzip; \
-\
-docker-php-ext-install >/dev/null -j$(nproc) \
+        --with-xpm-dir=/usr/include/
+sudo docker-php-ext-configure >/dev/null imap --with-kerberos --with-imap-ssl
+sudo docker-php-ext-configure >/dev/null ldap --with-libdir=lib/x86_64-linux-gnu/
+sudo docker-php-ext-configure >/dev/null pgsql --with-pgsql=/usr/local/pgsql/
+sudo docker-php-ext-configure >/dev/null zip --with-libzip
+
+sudo docker-php-ext-install >/dev/null -j$(nproc) \
         bcmath \
         bz2 \
         calendar\
@@ -127,17 +129,17 @@ docker-php-ext-install >/dev/null -j$(nproc) \
         sockets \
         ssh2 \
         xsl \
-        zip \
-;\
-pecl update-channels; \
-pecl install >/dev/null </dev/null \
+        zip
+
+sudo pecl update-channels
+sudo pecl install >/dev/null </dev/null \
         apcu \
         gnupg \
         imagick \
         memcached \
         redis \
         xdebug
-docker-php-ext-enable \
+sudo docker-php-ext-enable \
         apcu \
         gnupg \
         imagick \
@@ -145,34 +147,57 @@ docker-php-ext-enable \
         redis
 
 # Hub
-curl -fsSL "https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz" -o /usr/local/bin/hub
+sudo curl -fsSL "https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz" -o /usr/local/bin/hub
 # Composer
-curl -fsSL "https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar" -o /usr/local/bin/composer
+sudo curl -fsSL "https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar" -o /usr/local/bin/composer
 # Drush 8 (global fallback)
-curl -fsSL "https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar" -o /usr/local/bin/drush8
+sudo curl -fsSL "https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar" -o /usr/local/bin/drush8
 # Drush Launcher
-curl -fsSL "https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar" -o /usr/local/bin/drush
+sudo curl -fsSL "https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar" -o /usr/local/bin/drush
 # Drupal Console Launcher
-curl -fsSL "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" -o /usr/local/bin/drupal
+sudo curl -fsSL "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" -o /usr/local/bin/drupal
 # Wordpress CLI
-curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar" -o /usr/local/bin/wp
+sudo curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar" -o /usr/local/bin/wp
 # Platform.sh CLI
-curl -fsSL "https://github.com/platformsh/platformsh-cli/releases/download/v${PLATFORMSH_CLI_VERSION}/platform.phar" -o /usr/local/bin/platform
+sudo curl -fsSL "https://github.com/platformsh/platformsh-cli/releases/download/v${PLATFORMSH_CLI_VERSION}/platform.phar" -o /usr/local/bin/platform
 # Make all downloaded binaries executable in one shot
-(cd /usr/local/bin && chmod +x composer drush8 drush drupal wp platform hub);
+cd /usr/local/bin
+sudo chmod +x composer drush8 drush drupal wp platform hub
+
+# Configure the GitHub Oauth token if it is available
+if [ -n "$GITHUB_TOKEN" ]; then
+  composer -n config --global github-oauth.github.com $GITHUB_TOKEN
+fi
 
 # Install cgr to use it in-place of `composer global require`
-su -l circleci -c 'composer global require consolidation/cgr >/dev/null'
+composer global require consolidation/cgr >/dev/null
 # Composer parallel install plugin
-su -l circleci -c 'composer global require hirak/prestissimo >/dev/null'
+composer global require hirak/prestissimo >/dev/null
+
+(
+  echo 'export PATH="$PATH:$HOME/.composer/vendor/bin'
+) >> $BASH_ENV
+
+source $BASH_ENV
+
+echo 'Contents of BASH_ENV:'
+cat $BASH_ENV
+echo
+
 # Drupal Coder & WP Coding Standards w/ a matching version of PHP_CodeSniffer
-su -l circleci -c 'cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp > /dev/null'
-su -l circleci -c 'phpcs --config-set installed_paths "$HOME/.composer/global/drupal/coder/vendor/drupal/coder/coder_sniffer/,$HOME/.composer/global/wp-coding-standards/wpcs/vendor/wp-coding-standards/wpcs/"'
+cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp > /dev/null
+phpcs --config-set installed_paths "$HOME/.composer/global/drupal/coder/vendor/drupal/coder/coder_sniffer/,$HOME/.composer/global/wp-coding-standards/wpcs/vendor/wp-coding-standards/wpcs/"
 # Terminus
-su -l circleci -c "cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null"
+cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null
 # Cleanup
-su -l circleci -c 'composer clear-cache'
+composer clear-cache
 
 # Drush modules
-su -l circleci -c 'drush dl registry_rebuild --default-major=7 --destination=$HOME/.drush >/dev/null'
-su -l circleci -c 'drush cc drush'
+cd /tmp
+drush dl registry_rebuild --default-major=7 --destination=$HOME/.drush >/dev/null
+drush cc drush
+
+# Install Apache Example Config
+sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
+sudo a2ensite example
+sudo service apache2 start

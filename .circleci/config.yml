@@ -17,15 +17,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Add Composer to Path
-          command: echo 'export PATH="$PATH:$HOME/.composer/vendor/bin' >> $BASH_ENV
-      - run:
           name: Configure & start Apache
-          command: |
-            sudo ~/project/.circleci/install.sh
-            sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
-            sudo a2ensite example
-            sudo service apache2 start
+          command: ~/project/.circleci/install.sh
       - run:
           name: Update host file
           command: |
