@@ -6,7 +6,7 @@ jobs:
       - image: circleci/php:7.2-apache-stretch-node-browsers
         environment:
           DRUSH_LAUNCHER_FALLBACK: /usr/local/bin/drush8
-          WEBSITE_URL: "http://example.localhost"
+          WEBSITE_URL: "example.localhost"
           DBROOTPW: rootpw
       - image: circleci/mariadb:jessie
         environment:
@@ -61,6 +61,6 @@ jobs:
           name: Take Screenshots
           command: |
             cd $ARTIFACTS_FULL_DIR
-            pageres https://google.com $WEBSITE_URL 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
+            pageres https://google.com http://${WEBSITE_URL} 1280x800 --format=jpg --filename="<%= date %>_<%= url %>"
       - store_artifacts:
           path: /tmp/artifacts
