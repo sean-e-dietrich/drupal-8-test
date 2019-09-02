@@ -213,7 +213,7 @@ drush cc drush
 # Install Apache Example Config
 sudo cp ~/project/.circleci/example.conf /etc/apache2/sites-available/example.conf
 sudo a2ensite example
-sudo service apache2 reload
+sudo service apache2 start
 
 # Install Page Res
 sudo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install -g pageres-cli
