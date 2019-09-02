@@ -145,41 +145,41 @@ docker-php-ext-enable \
         redis
 
 # Hub
-curl -fsSL "https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz" -o /usr/local/bin/hub; \
+curl -fsSL "https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz" -o /usr/local/bin/hub
 # Composer
-curl -fsSL "https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar" -o /usr/local/bin/composer; \
+curl -fsSL "https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar" -o /usr/local/bin/composer
 # Drush 8 (global fallback)
-curl -fsSL "https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar" -o /usr/local/bin/drush8; \
+curl -fsSL "https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar" -o /usr/local/bin/drush8
 # Drush Launcher
-curl -fsSL "https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar" -o /usr/local/bin/drush; \
+curl -fsSL "https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar" -o /usr/local/bin/drush
 # Drupal Console Launcher
-curl -fsSL "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" -o /usr/local/bin/drupal; \
+curl -fsSL "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" -o /usr/local/bin/drupal
 # Wordpress CLI
-curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar" -o /usr/local/bin/wp; \
+curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar" -o /usr/local/bin/wp
 # Platform.sh CLI
-curl -fsSL "https://github.com/platformsh/platformsh-cli/releases/download/v${PLATFORMSH_CLI_VERSION}/platform.phar" -o /usr/local/bin/platform; \
+curl -fsSL "https://github.com/platformsh/platformsh-cli/releases/download/v${PLATFORMSH_CLI_VERSION}/platform.phar" -o /usr/local/bin/platform
 # Make all downloaded binaries executable in one shot
 (cd /usr/local/bin && chmod +x composer drush8 drush drupal wp platform hub);
 
 # Set drush8 as a global fallback for Drush Launcher
-su -l -m circleci -c 'echo "export DRUSH_LAUNCHER_FALLBACK=/usr/local/bin/drush8" | tee -a $BASH_ENV'
+su -l circleci -c 'echo "export DRUSH_LAUNCHER_FALLBACK=/usr/local/bin/drush8" | tee -a $BASH_ENV'
 
 # Composer based dependencies
 # Add composer bin directory to PATH
-su -l -m circleci -c 'echo \"export PATH="$PATH:$HOME/.composer/vendor/bin"\" | tee -a $BASH_ENV'
+su -l circleci -c 'echo \"export PATH="$PATH:$HOME/.composer/vendor/bin"\" | tee -a $BASH_ENV'
 
 # Install cgr to use it in-place of `composer global require`
-su -l -m circleci -c "composer global require consolidation/cgr >/dev/null"
+su -l circleci -c 'composer global require consolidation/cgr >/dev/null'
 # Composer parallel install plugin
-su -l -m circleci -c 'composer global require hirak/prestissimo >/dev/null'
+su -l circleci -c 'composer global require hirak/prestissimo >/dev/null'
 # Drupal Coder & WP Coding Standards w/ a matching version of PHP_CodeSniffer
-su -l -m circleci -c 'cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp > /dev/null'
-su -l -m circleci -c 'phpcs --config-set installed_paths "$HOME/.composer/global/drupal/coder/vendor/drupal/coder/coder_sniffer/,$HOME/.composer/global/wp-coding-standards/wpcs/vendor/wp-coding-standards/wpcs/"'
+su -l circleci -c 'cgr drupal/coder wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp > /dev/null'
+su -l circleci -c 'phpcs --config-set installed_paths "$HOME/.composer/global/drupal/coder/vendor/drupal/coder/coder_sniffer/,$HOME/.composer/global/wp-coding-standards/wpcs/vendor/wp-coding-standards/wpcs/"'
 # Terminus
-su -l -m circleci -c "cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null"
+su -l circleci -c "cgr pantheon-systems/terminus:${TERMINUS_VERSION} >/dev/null"
 # Cleanup
-su -l -m circleci -c "composer clear-cache"
+su -l circleci -c 'composer clear-cache'
 
 # Drush modules
-su -l -m circleci -c 'drush dl registry_rebuild --default-major=7 --destination=$HOME/.drush >/dev/null'
-su -l -m circleci -c 'drush cc drush'
+su -l circleci -c 'drush dl registry_rebuild --default-major=7 --destination=$HOME/.drush >/dev/null'
+su -l circleci -c 'drush cc drush'
